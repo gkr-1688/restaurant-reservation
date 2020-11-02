@@ -1,0 +1,182 @@
+<html lang="en">
+ 
+<head>
+	<meta charset="utf-8">
+	<title>Gkr Calculator</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        body {
+  background: rgb(242, 242, 255);
+  color: #081625;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+ 
+.header {
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 1.35em;
+}
+ 
+.container {
+  margin: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  padding-bottom: 30px;
+  background-color: rgb(250, 250, 250);
+  border-radius: 5px;
+  box-shadow: 0 5px 10px 0 black;
+}
+ 
+form {
+  text-align: center;
+  margin-bottom: 20px;
+}
+ 
+input, select {
+  width: 80%;
+  height: 30px;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+ 
+.calc {
+  margin: 10px;
+  border-color: saddlebrown;
+  border-bottom-left-radius: 10px;
+  border-left-width: 3px;
+  padding: 20px 30px;
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background-color: #3B3B98;  
+  cursor: pointer;
+}
+ 
+#single, #multiple {
+  margin: 30px 0;
+  font-size: 1.3em;
+}
+    </style>
+    <script>
+function calculateGkr() {
+ 
+    resetGkr();
+ 
+    var billAmount = document.getElementById("amount").value;
+    var gkrPercentage = document.getElementById("gkr").value;
+    var numberOfPeople = document.getElementById("numberPeople").value;
+ 
+    // Validate the bill amount field.
+    if (billAmount === "") {
+        alert("Please enter bill amount.");
+        return;
+    }
+ 
+    // Calculate the total tip.
+    function gkrCalc() {
+        let gkrTotal = ((billAmount * 100) * gkrPercentage) / 100;
+        gkrTotal = gkrTotal.toFixed(2);
+        return gkrTotal;
+    }
+ 
+    // Call gkrCalc() function.
+    var totalGkr = gkrCalc();
+ 
+    if (numberOfPeople > 1) {
+        document.getElementById("multiple").style.display = "block";
+        let bill = (billAmount / numberOfPeople);
+        let gkr = (totalGkr / numberOfPeople);
+        document.getElementById("totalGkrMultiple").innerHTML = gkr.toFixed(2);
+ 
+        let amountEach = ( parseFloat(bill) - parseFloat(gkr));
+        document.getElementById("totalAmountEach").innerHTML = amountEach.toFixed(2);
+ 
+        let multipleTotal = ( parseFloat(billAmount) - parseFloat(totalGkr));
+        document.getElementById("billTotalmultiple").innerHTML = multipleTotal.toFixed(2);
+ 
+    } else {
+        document.getElementById("single").style.display = "block";
+        let singleTotal = ( parseFloat(billAmount) - parseFloat(totalGkr));
+        document.getElementById("gkrAmount").innerHTML = totalGkr;
+        document.getElementById("billTotal").innerHTML = singleTotal.toFixed(2);
+    }
+}
+ 
+resetGkr();
+ 
+// Hide the single and multiple blocks
+function resetGkr() {
+    document.getElementById("single").style.display = "none";
+    document.getElementById("multiple").style.display = "none";
+}
+    </script>
+    <style>
+      h2 {
+    border-style: solid;
+    border-width: 5px;
+    border-top-left-radius: 10px;
+    border-right-width: 20px;
+    border-color: rgb(104, 155, 23);
+}
+    </style>
+</head>
+ 
+<body>
+	<div class="container">
+		<div class="header">
+			<h2 style="color: blue;">  GKR restaurant recept bill Calculator</h2>
+		</div>
+		<form>
+			<p><b>How much is the bill for room, food and drinks?</b></p>
+      <input type="number" id="amount" placeholder="Bill Amount" maxlength="9">
+			<p><b>How many time you visited?</b></p>
+			<select id="gkr">
+				<option value="0.05" style="color: cornsilk;">5% off for 1st time visiting</option>
+				<option value="0.1" style="color: cyan;">10% off for 2nd time visiting</option>
+				<option value="0.15" style="color: darkkhaki;">15% off for 5th time visiting</option>
+				<option value="0.2" style="color: darksalmon;">20% off for 10th time visiting</option>
+				<option value="0.3" style="color: green;">30% off for regular visitor</option>
+			</select>
+			<p><b>How many people are there with?</b></p>
+			<select id="numberPeople">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+			</select>
+		</form>
+		<button class="calc" onclick="calculateGkr()">Calculate</button>
+		<div id="single">
+			<p><b>offer amount: $<span id="gkrAmount"></span></b></p>
+			<p><b>Total: $<span id="billTotal"></span></b></p>
+		</div>
+		<div id="multiple">
+			<p><b>offer amount Per Person: $<span id="totalGkrMultiple"></span></b></p>
+			<p><b>Total bill Per Person: $<span id="totalAmountEach"></span></b></p>
+			<p><b>Bill Total: $<span id="billTotalmultiple"></span></b></p>
+		</div>
+	</div>
+</body>
+</html>

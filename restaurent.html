@@ -1,0 +1,365 @@
+<html>
+<head>
+	<title> RESERVATION OF RESTAURANT </title>
+	<link rel="stylesheet" type="text/css" href="/style/style.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/myscript.js"></script>
+
+</head>
+<style>
+body {
+
+	background: #f8f8ff;
+	color: black;
+	font-size: 15px;
+	
+}
+
+#basliq {
+background: #8dbc8f;
+color: #2f4f4f;
+text-align: center;
+margin: auto;
+border: 1px solid grey;
+padding: 10 px;
+font-size: 20px;
+}
+
+.title {
+background: #8dbc8f;
+color: white;
+margin: auto;
+text-align: center;
+padding: 5px;
+font-size: 20px;
+}
+
+.contain {
+
+border: 1px dotted black;
+margin: 10px;
+}
+
+#leftpanel {
+
+	background: white;
+	color: black;
+	width: 30%;
+	border: 1px solid grey;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: left;
+}
+
+.qida {
+background: #deb887;
+color: black;
+margin: auto;
+text-align: center;
+padding: 5px;
+
+}
+
+.yemek, .icki {
+background: #ffffff;
+color: black;
+margin: auto;
+text-align: center;
+padding: 5px;
+
+}
+
+.yemek p, .icki p {
+	cursor: pointer;
+}
+
+#rightpanel {
+
+	background: white;
+	color: black;
+	width: 65%;
+	border: 1px solid grey;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: right;
+}
+
+.table {
+	text-align: center;
+	width: 130px;
+	height: 130px;
+	border: 2px solid grey;
+	border-radius: 100%;
+	background: #dcdcdc;
+	display: inline-block;
+	margin-left: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.table p {
+	position: relative;
+	top: 40px;
+	width: 100px;
+	margin: auto;
+	word-wrap: break-word;
+
+}
+
+.table span {
+	position: relative;
+	top: 20px;
+	width: 100px;
+	margin: auto;
+}
+
+
+.table-result {
+	border: 1px dotted green;
+	margin: 10px;
+	min-height: 20px;
+	
+}
+
+.table-result p {
+	word-wrap: break-word;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.table-result p span {
+	background: #b0c4de;
+	color: #191970;
+	cursor: pointer;
+}
+
+.table-result span {
+	background: #dcdcdc;
+	color: #2f4f4f;
+	margin-left: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.hesab {
+	outline: none;
+	background: #778899;
+	color: #ffffff;
+	padding: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+}
+.clear {
+	clear: both;
+}
+</style>
+<script>
+    
+$(document).ready(function() {
+
+function StaffMember(name,discountPercent){
+    this.name = name;
+    this.discountPercent = discountPercent;
+}
+
+// Create yourself again as 'me' with a staff discount of 20%
+var me = new StaffMember("Ceki", 20);
+
+
+var cashRegister = {
+    total:0,
+    lastTransactionAmount: 0,
+    add: function(itemCost){
+        this.total += (itemCost || 0);
+        this.lastTransactionAmount = itemCost;
+    },
+    scan: function(item,quantity){
+        switch (item){
+
+        	//qida
+        case "pizza": this.add(2 * quantity); break;
+        case "sushi": this.add(4 * quantity); break;
+        case "shokolad": this.add(1 * quantity); break;
+        case "clubsandvich": this.add(1.50 * quantity); break;
+        case "burger": this.add(2 * quantity); break;
+        case "stake": this.add(12 * quantity); break;
+        case "chicken": this.add(6 * quantity); break;
+        case "sezarsalad": this.add(2 * quantity); break;
+        case "tunafish": this.add(10.99 * quantity); break;
+
+        //icki
+        case "cola": this.add(0.5 * quantity); break;
+        case "fanta": this.add(0.5 * quantity); break;
+        case "hell": this.add(2 * quantity); break;
+		case "redbul": this.add(4 * quantity); break;
+        case "vodka": this.add(16.50 * quantity); break;
+        case "viski": this.add(33 * quantity); break;
+
+
+        }
+        return true;
+    },
+    voidLastTransaction : function(){
+        this.total -= this.lastTransactionAmount;
+        this.lastTransactionAmount = 0;
+    },
+    // Create a new method applyStaffDiscount here
+    applyStaffDiscount: function(employee) {
+        this.total -= this.total * (employee.discountPercent / 100);
+        
+    }
+    
+};
+
+
+//cashRegister.applyStaffDiscount(me);
+
+
+// Hide all table result divs
+$("#rightpanel .table-result").hide();
+
+//Toggle table result divs with clicking on related table
+
+$("#rightpanel .contain").on("click", ".table", function() {
+
+var tabid = $(this).attr("id");
+
+
+$("#leftpanel .contain p").removeAttr("class");
+$("#leftpanel .contain p").addClass(tabid);
+$("#rightpanel").children(".table-result").hide();
+$("#rightpanel").children("#table"+ tabid +"").toggle();
+
+
+});
+
+// Show the total bill
+$("#rightpanel .contain .table p").html('Sum: ' + cashRegister.total.toFixed(2) + '');
+
+
+
+//add qida to result-panel by clicking qidalar
+
+$("#leftpanel .contain p").click(function() {
+
+var tabid = $(this).attr("class");
+
+if(tabid == null){
+	alert("Please select table");
+}
+else {
+
+var orders = [];
+var yemek = $(this).attr("id"); // get the value of attribute id
+$("#rightpanel #table" + tabid + ".table-result p").append("<span>" + yemek + ",</span>");
+
+}
+
+// click on table result items for deleting them
+$("#rightpanel #table" + tabid + ".table-result p").on("click", "span", function() {
+$(this).remove();
+});
+
+
+// click to result table and show the price
+$("#rightpanel #table" + tabid + ".table-result button#sum").click(function() {
+
+var metn = $("#rightpanel #table" + tabid + ".table-result p").text(); // get the text of table result
+var letterorders = metn.length; // count characters from metn text
+var yemek2 = metn.substring(0, letterorders - 1); // cut the last comma 
+
+var orders = yemek2.split(",");
+
+
+var  count = {}; 
+orders.forEach(function(i) { count[i] = (count[i]||0)+1;  });
+cashRegister.total = 0;
+
+for(u = 0; u < orders.length; u++) {
+	//cashRegister.total = 0;
+cashRegister.scan(orders[u],1);
+
+
+}
+
+console.log();
+$("#rightpanel .contain #" + tabid + ".table p").html('Sum: ' + (cashRegister.total).toFixed(2) + '');
+
+
+});
+
+// here close the table and set the sum to zero
+$("#rightpanel #table" + tabid + ".table-result button#close").click(function() {
+
+
+cashRegister.total = 0;
+$("#rightpanel .contain #" + tabid + ".table p").html('Sum: ' + (cashRegister.total).toFixed(2) + '');
+$("#rightpanel #table" + tabid + ".table-result p").empty();
+});
+});
+});
+function myFunction() {
+    alert("The form was reset");
+}
+</script>
+<body>
+	<div id="basliq"> <h2 style="color: rgb(36, 38, 167);">GKR reastaurant reservation and payment</h2> </div>
+	
+	<div id="leftpanel">
+		<div class="title"> Menu (<i>15</i>)</div>
+		<div class="contain">
+		<div class="qida"> Foods </div>
+		<div class="yemek">
+		<p id="pizza"> Pizza (<i>50 rupees</i>)</p>
+		<p id="sushi"> Sushi (<i>40 rupees</i>)</p>
+		<p id="shokolad"> Shokolad (<i>10 rupees</i>)</p>
+		<p id="clubsandvich"> Club Sandvich (<i>60 rupees</i>)</p>
+		<p id="burger"> Burger (<i>50 rupees</i>)</p>
+		<p id="stake"> Stake (<i>120 rupees</i>)</p>
+		<p id="chicken"> Chicken (<i>60 rupees</i>)</p>
+		<p id="sezarsalad"> Sezar salad (<i>20 rupees</i>)</p>
+		<p id="tunafish"> Tuna fish (<i>100 rupees</i>)</p>
+
+		</div>
+
+		<div class="qida"> Drinks </div>
+		<div class="icki">
+		<p id="cola"> Cola (<i>15 rupees</i>)</p>
+		<p id="fanta"> Fanta (<i>15 rupees</i>)</p>
+		<p id="hell"> Hell (<i>20 rupees</i>)</p>
+		<p id="redbul"> Redbull (<i>40 rupees</i>)</p>
+		<p id="thumps up"> thumps up (<i>60 rupees</i>)</p>
+		<p id="viski"> pepsi (<i>30 rupees</i>)</p>
+
+
+		</div>
+		</div>
+
+	</div>
+
+	<div id="rightpanel">
+		<div class="title"> Rooms </div>
+		<div class="contain">
+		<div class="table" id="1"><span>customer 1</span><p></p></div>
+		<div class="table" id="2"><span>customer 2</span><p></p></div>
+		<div class="table" id="3"><span>customer 3</span><p></p></div>
+		<div class="table" id="4"><span>customer 4</span><p></p></div>
+		<div class="table" id="5"><span>customer 5</span><p></p></div>
+
+		<div class="clear"></div>
+		</div>
+
+		<div class="table-result" id="table1"><span>customer 1:</span><p></p><br/><button class="hesab" id="sum"><a href="calculator bill.html">Calculate</a></button><form onreset="myFunction()"><input type="reset"></form></div>
+		<div class="table-result" id="table2"><span>customer 2:</span><p></p><br/><button class="hesab" id="sum"><a href="calculator bill.html">Calculate</a></button><form onreset="myFunction()"><input type="reset"></form></div>
+		<div class="table-result" id="table3"><span>customer 3:</span><p></p><br/><button class="hesab" id="sum"><a href="calculator bill.html">Calculate</a></button><form onreset="myFunction()"><input type="reset"></form></div>
+		<div class="table-result" id="table4"><span>customer 4:</span><p></p><br/><button class="hesab" id="sum"><a href="calculator bill.html">Calculate</a></button><form onreset="myFunction()"><input type="reset"></form></div>
+		<div class="table-result" id="table5"><span>customer 5:</span><p></p><br/><button class="hesab" id="sum"><a href="calculator bill.html">Calculate</a></button><form onreset="myFunction()"><input type="reset"></form></div>
+  <h5> Tip: Before adding a food or drink select the table. You can add any number of items. For deleting added item just click on it. Before closing order first calculate it, then close :) </h5>
+	</div>
+
+<div class="clear"></div>
+</body>
+</html>
